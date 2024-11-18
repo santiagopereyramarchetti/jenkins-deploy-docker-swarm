@@ -1,0 +1,5 @@
+FROM nginx:1.25.1-alpine AS prod
+
+COPY ./docker/proxy/config/proxy.conf /etc/nginx/nginx.conf
+
+EXPOSE 80 443
