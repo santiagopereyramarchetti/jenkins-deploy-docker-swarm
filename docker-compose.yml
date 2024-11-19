@@ -1,14 +1,13 @@
 version: "3.8"
 services:
+
   proxy:
-    build:
-      context: .
-      dockerfile: ./docker/proxy/Dockerfile.proxy
+    image: santiagopereyramarchetti/proxy:1.2
     deploy:
       replicas: 1
-      # placement:
-      #   constraints:
-      #     - "node.labels.db!=true"
+      placement:
+        constraints:
+          - "node.labels.db!=true"
       restart_policy:
         condition: any
         delay: 10s
@@ -28,15 +27,12 @@ services:
       - nginx
   
   frontend:
-    build:
-      context: .
-      dockerfile: ./docker/vue/Dockerfile.vue
-      target: prod
+    image: santiagopereyramarchetti/frontend:1.2
     deploy:
       replicas: 2
-      # placement:
-      #   constraints:
-      #     - "node.labels.db!=true"
+      placement:
+        constraints:
+          - "node.labels.db!=true"
       restart_policy:
         condition: any
         delay: 10s
@@ -59,15 +55,16 @@ services:
       retries: 3
       start_period: 1m30s
 
+  ## Falta el environment incluir junto con docker configs o docker secrets
   nginx:
-    build:
-      context: .
-      dockerfile: ./docker/nginx/Dockerfile.nginx
+    image: santiagopereyramarchetti/nginx:1.2
+    secrets:
+      - laravel_env
     deploy:
       replicas: 2
-      # placement:
-      #   constraints:
-      #     - "node.labels.db!=true"
+      placement:
+        constraints:
+          - "node.labels.db!=true"
       restart_policy:
         condition: any
         delay: 10s
@@ -95,15 +92,15 @@ services:
     depends_on:
       - api
 
+  ## Falta el environment incluir junto con docker configs o docker secrets
   api:
-    build:
-      context: .
-      dockerfile: ./docker/laravel/Dockerfile.laravel
+    image: santiagopereyramarchetti/api:1.2
+    entrypoint: ["sh", "-c", "chmod +x /usr/src/init.sh && /usr/src/init.sh && php-fpm"]
     deploy:
       replicas: 4
-      # placement:
-      #   constraints:
-      #     - "node.labels.db!=true"
+      placement:
+        constraints:
+          - "node.labels.db!=true"
       restart_policy:
         condition: any
         delay: 5s
@@ -178,15 +175,14 @@ services:
     depends_on:
       - mysql
       - redis
-
+      
+  ## Falta el environment incluir junto con docker configs o docker secrets    
   mysql:
-    build:
-      context: .
-      dockerfile: ./docker/mysql/Dockerfile.mysql
+    image: santiagopereyramarchetti/mysql:1.2
     deploy:
-      # placement:
-      #   constraints:
-      #     - "node.labels.db==true"
+      placement:
+        constraints:
+          - "node.labels.db==true"
       restart_policy:
         condition: any
         delay: 5s
@@ -220,9 +216,9 @@ services:
   redis:
     image: redis:7-alpine
     deploy:
-      # placement:
-      #   constraints:
-      #     - "node.labels.db==true"
+      placement:
+        constrain3s:
+          - "node.labels.db==true"
       restart_policy:
         condition: any
         delay: 5s

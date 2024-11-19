@@ -1,4 +1,4 @@
-FROM php:8.2-fpm
+FROM php:8.2-fpm AS base
 
 WORKDIR /usr/src
 
@@ -31,6 +31,20 @@ COPY ./backend .
 COPY ./docker/laravel/config/php-fpm/php.ini /usr/local/etc/php/conf.d/php.ini
 COPY ./docker/laravel/config/php-fpm/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY ./docker/laravel/config/init.sh /usr/src/init.sh
+RUN chmod +x /usr/src/init.sh
+
+FROM base AS dev
+
+RUN composer install --no-interaction --optimize-autoloader
+
+RUN php artisan storage:link && \
+    chown -R backend:backend /usr/src && \
+    chmod -R 775 ./storage ./bootstrap/cache
+
+USER backend
+ENTRYPOINT ["sh", "-c", "chmod +x /usr/src/init.sh"]
+
+FROM base AS prod
 
 RUN composer install --no-interaction --optimize-autoloader --no-dev
 
@@ -39,4 +53,4 @@ RUN php artisan storage:link && \
     chmod -R 775 ./storage ./bootstrap/cache
 
 USER backend
-# ENTRYPOINT ["sh", "-c", "chmod +x /usr/src/init.sh && /usr/src/init.sh && php-fpm"]
+ENTRYPOINT ["sh", "-c", "chmod +x /usr/src/init.sh"]

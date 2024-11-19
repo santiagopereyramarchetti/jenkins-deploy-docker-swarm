@@ -1,18 +1,10 @@
 #!/bin/sh
-ENV_FILE="/usr/src/.env.ini"
-if [ -f "$ENV_FILE" ]; then
-    export $(grep -v '^#' "$ENV_FILE" | xargs)
-    echo "Variables cargadas desde $ENV_FILE"
-else
-    echo "Archivo $ENV_FILE no encontrado"
-    exit 1
-fi
 
 start_time=$(date +%s)
 
 while true; do
     # Intentar conectarse al MySQL en el contenedor
-    if $MYSQL_CONTAINER_NAME mysql -u"$DB_USER" -p"$DB_PASSWORD" -e "SELECT 1;" >/dev/null 2>&1; then
+    if docker exec $MYSQL_CONTAINER_NAME mysql -u"$DB_USER" -p"$DB_PASSWORD" -e "SELECT 1;" >/dev/null 2>&1; then
         echo "MySQL está listo para aceptar conexiones."
         break
     else
@@ -32,13 +24,11 @@ while true; do
     sleep "$WAIT_INTERVAL"
 done
 
-php artisan storage:link
-php artisan optimize:clear
-php artisan down
-php artisan migrate --force
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
-php artisan up
-
-exec php-fpm
+docker exec $API_CONTAINER_NAME php artisan storage:link
+docker exec $API_CONTAINER_NAME php artisan optimize:clear
+docker exec $API_CONTAINER_NAME php artisan down
+docker exec $API_CONTAINER_NAME php artisan migrate --force
+docker exec $API_CONTAINER_NAME php artisan config:cache
+docker exec $API_CONTAINER_NAME php artisan route:cache
+docker exec $API_CONTAINER_NAME php artisan view:cache
+docker exec $API_CONTAINER_NAME php artisan up
