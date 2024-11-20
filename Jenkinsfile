@@ -39,7 +39,10 @@ pipeline {
         LARAVEL_ENV = credentials('laravel-env')
         MYSQL_ENV = credentials('mysql-env')
         INIT_ENV = credentials('ini-env')
+        INIT_ENV_BUILD = credentials('ini-env-build')
 
+        LARAVEL_ENV_SECRET = "laravel-secret-3"
+        INIT_ENV_SECRET = "init-secret-3"
     }
 
     stages{
@@ -56,6 +59,7 @@ pipeline {
                     writeFile file: '.env', text: readFile(LARAVEL_ENV)
                     writeFile file: '.env.mysql', text: readFile(MYSQL_ENV)
                     writeFile file: '.env.ini', text: readFile(INIT_ENV)
+                    writeFile file: '.env.ini.build', text: readFile(INIT_ENV_BUILD)
                     sh 'docker compose -f docker-compose.ci.yml up -d'
                     sh 'docker wait inicialization'
                 }
@@ -129,22 +133,16 @@ pipeline {
                         scp -o StrictHostKeyChecking=no ./docker-compose.yml ${REMOTE_HOST}:~/docker-compose.yml
     
                         ssh -o StrictHostKeyChecking=no ${REMOTE_HOST} "export MYSQL_IMAGE_NAME='${MYSQL_IMAGE_NAME}' \
-                            export MYSQL_CONTAINER_NAME='${MYSQL_CONTAINER_NAME}' \
                             export API_IMAGE_NAME='${API_IMAGE_NAME}' \
-                            export API_CONTAINER_NAME='${API_CONTAINER_NAME}' \
                             export NGINX_IMAGE_NAME='${NGINX_IMAGE_NAME}' \
-                            export NGINX_CONTAINER_NAME='${NGINX_CONTAINER_NAME}' \
                             export FRONTEND_IMAGE_NAME='${FRONTEND_IMAGE_NAME}' \
-                            export FRONTEND_CONTAINER_NAME='${FRONTEND_CONTAINER_NAME}' \
                             export PROXY_IMAGE_NAME='${PROXY_IMAGE_NAME}' \
-                            export PROXY_CONTAINER_NAME='${PROXY_CONTAINER_NAME}' \
-                            export INICIALIZATION_IMAGE_NAME='${INICIALIZATION_IMAGE_NAME}' \
-                            export INICIALIZATION_CONTAINER_NAME='${INICIALIZATION_CONTAINER_NAME}' \
                             export REDIS_IMAGE_NAME='${REDIS_IMAGE_NAME}' \
                             export REDIS_CONTAINER_NAME='${REDIS_CONTAINER_NAME}' \
+                            export REDIS_CONTAINER_NAME='${LARAVEL_ENV_SECRET}' \
+                            export REDIS_CONTAINER_NAME='${INIT_ENV_SECRET}' \
+                            && docker stack deploy -f docker-compose.yml my-app"
                     '''
-                            // Falta comando para deployar en swarm
-                            // && docker compose -f ~/docker-compose.yml up -d"
                 }
             }
         }

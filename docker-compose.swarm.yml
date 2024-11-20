@@ -2,7 +2,7 @@ version: "3.8"
 services:
 
   proxy:
-    image: ${PROXY_IMAGE_NAME}
+    image: santiagopereyramarchetti/proxy:1.2
     deploy:
       replicas: 1
       placement:
@@ -27,7 +27,7 @@ services:
       - nginx
   
   frontend:
-    image: ${FRONTEND_IMAGE_NAME}
+    image: santiagopereyramarchetti/frontend:1.2
     deploy:
       replicas: 2
       placement:
@@ -57,7 +57,7 @@ services:
 
   ## Falta el environment incluir junto con docker configs o docker secrets
   nginx:
-    image: ${NGINX_IMAGE_NAME}
+    image: santiagopereyramarchetti/nginx:1.2
     secrets:
       - source: laravel-env
         target: /usr/src/.env
@@ -95,7 +95,7 @@ services:
       - api
 
   api:
-    image: ${API_IMAGE_NAME}
+    image: santiagopereyramarchetti/api:1.2
     secrets:
       - source: laravel-env
         target: /usr/src/.env
@@ -137,7 +137,7 @@ services:
       - redis
       
   mysql:
-    image: ${MYSQL_IMAGE_NAME}
+    image: santiagopereyramarchetti/mysql:1.2
     deploy:
       placement:
         constraints:
@@ -173,7 +173,7 @@ services:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
 
   redis:
-    image: ${REDIS_IMAGE_NAME}
+    image: redis:7-alpine
     deploy:
       placement:
         constraints:
@@ -213,7 +213,7 @@ volumes:
 secrets:
   laravel-env:
     file: ./.env
-    name: ${LARAVEL_ENV_SECRET}
+    name: laravel-env-2
   init-env:
     file: ./.env.ini
-    name: ${INIT_ENV_SECRET}
+    name: init-env-2
