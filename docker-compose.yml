@@ -94,7 +94,6 @@ services:
     depends_on:
       - api
 
-  ## Falta el environment incluir junto con docker configs o docker secrets
   api:
     image: santiagopereyramarchetti/api:1.2
     secrets:

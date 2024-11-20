@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 ENV_FILE="/usr/src/.env.ini"
 if [ -f "$ENV_FILE" ]; then
     export $(grep -v '^#' "$ENV_FILE" | xargs)
@@ -12,7 +12,7 @@ start_time=$(date +%s)
 
 while true; do
     # Intentar conectarse al MySQL en el contenedor
-    if mysql -h "$MYSQL_CONTAINER_NAME" -u"$DB_USER" -p"$DB_PASSWORD" -e "SELECT 1;" >/dev/null 2>&1; then
+    if mysql -h"$MYSQL_SERVICE_NAME" -u"$DB_USER" -p"$DB_PASSWORD" -e "SELECT 1;" >/dev/null 2>&1; then
         echo "MySQL está listo para aceptar conexiones."
         break
     else
