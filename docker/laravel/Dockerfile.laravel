@@ -42,7 +42,7 @@ RUN php artisan storage:link && \
     chmod -R 775 ./storage ./bootstrap/cache
 
 USER backend
-ENTRYPOINT ["sh", "-c", "/usr/src/init.sh"]
+# ENTRYPOINT ["sh", "-c", "/usr/src/init.sh"]
 
 FROM base AS prod
 

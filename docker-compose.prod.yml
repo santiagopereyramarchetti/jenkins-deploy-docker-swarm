@@ -30,6 +30,7 @@ services:
     container_name: api
     env_file:
       - .env
+      - .env.ini
     depends_on:
       - mysql
       - redis
@@ -50,15 +51,15 @@ services:
     volumes:
       - ./redisdata:/data
 
-  inicialization:
-    image: santiagopereyramarchetti/inicialization:1.2
-    container_name: inicialization
-    restart: no
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    env_file:
-      - .env.ini
-    depends_on:
-      - mysql
-      - redis
-      - api
+  # inicialization:
+  #   image: santiagopereyramarchetti/inicialization:1.2
+  #   container_name: inicialization
+  #   restart: no
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #   env_file:
+  #     - .env.ini.build
+  #   depends_on:
+  #     - mysql
+  #     - redis
+  #     - api

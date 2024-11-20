@@ -45,6 +45,7 @@ services:
     container_name: ${API_CONTAINER_NAME}
     env_file:
       - .env
+      - .env.ini
     restart: unless-stopped
     depends_on:
       - mysql
@@ -65,18 +66,18 @@ services:
     container_name: ${REDIS_CONTAINER_NAME}
     restart: unless-stopped
 
-  inicialization:
-    build:
-      context: .
-      dockerfile: ${INICIALIZATION_DOCKERFILE_PATH}
-    image: ${INICIALIZATION_IMAGE_NAME}
-    container_name: ${INICIALIZATION_CONTAINER_NAME}
-    env_file:
-      - .env.ini
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    restart: no
-    depends_on:
-      - mysql
-      - redis
-      - api
+  # inicialization:
+  #   build:
+  #     context: .
+  #     dockerfile: ${INICIALIZATION_DOCKERFILE_PATH}
+  #   image: ${INICIALIZATION_IMAGE_NAME}
+  #   container_name: ${INICIALIZATION_CONTAINER_NAME}
+  #   env_file:
+  #     - .env.ini.build
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #   restart: no
+  #   depends_on:
+  #     - mysql
+  #     - redis
+  #     - api

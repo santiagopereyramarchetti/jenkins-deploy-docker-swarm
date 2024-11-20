@@ -40,11 +40,12 @@ services:
     build:
       context: .
       dockerfile: ./docker/laravel/Dockerfile.laravel
-      target: prod
+      target: dev
     image: santiagopereyramarchetti/api:1.2
     container_name: api
     env_file:
       - .env
+      - .env.ini
     restart: unless-stopped
     depends_on:
       - mysql
@@ -72,7 +73,7 @@ services:
     image: santiagopereyramarchetti/inicialization:1.2
     container_name: inicialization
     env_file:
-      - .env.ini
+      - .env.ini.build
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: no

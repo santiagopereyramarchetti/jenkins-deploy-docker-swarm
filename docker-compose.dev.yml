@@ -68,6 +68,7 @@ services:
       - ./backend/composer.json:/usr/src/composer.json 
       - ./backend/composer.lock:/usr/src/composer.lock 
       - ./backend/.env:/usr/src/.env
+      - ./backend/.env.ini:/usr/src/.env.ini
     restart: unless-stopped
     depends_on:
       - mysql
@@ -92,23 +93,23 @@ services:
       - ./redisdata:/data
     restart: unless-stopped
 
-  inicialization:
-    build:
-      context: .
-      dockerfile: ./docker/inicialization/Dockerfile
-    image: santiagopereyramarchetti/inicialization:1.2
-    container_name: inicialization
-    environment:
-      DB_USER: backend
-      DB_PASSWORD: password
-      MAX_WAIT: 120
-      WAIT_INTERVAL: 10
-      MYSQL_CONTAINER_NAME: mysql
-      API_CONTAINER_NAME: api
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    restart: no
-    depends_on:
-      - mysql
-      - redis
-      - api
+  # inicialization:
+  #   build:
+  #     context: .
+  #     dockerfile: ./docker/inicialization/Dockerfile
+  #   image: santiagopereyramarchetti/inicialization:1.2
+  #   container_name: inicialization
+  #   environment:
+  #     DB_USER: backend
+  #     DB_PASSWORD: password
+  #     MAX_WAIT: 120
+  #     WAIT_INTERVAL: 10
+  #     MYSQL_CONTAINER_NAME: mysql
+  #     API_CONTAINER_NAME: api
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #   restart: no
+  #   depends_on:
+  #     - mysql
+  #     - redis
+  #     - api
