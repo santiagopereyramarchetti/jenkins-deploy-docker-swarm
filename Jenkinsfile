@@ -144,7 +144,7 @@ pipeline {
                             export REDIS_CONTAINER_NAME='${REDIS_CONTAINER_NAME}' \
                     '''
                             // Falta comando para deployar en swarm
-                            && docker compose -f ~/docker-compose.yml up -d"
+                            // && docker compose -f ~/docker-compose.yml up -d"
                 }
             }
         }

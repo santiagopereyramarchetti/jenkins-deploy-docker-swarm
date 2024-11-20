@@ -12,7 +12,7 @@ start_time=$(date +%s)
 
 while true; do
     # Intentar conectarse al MySQL en el contenedor
-    if $MYSQL_CONTAINER_NAME mysql -u"$DB_USER" -p"$DB_PASSWORD" -e "SELECT 1;" >/dev/null 2>&1; then
+    if mysql -h "$MYSQL_CONTAINER_NAME" -u"$DB_USER" -p"$DB_PASSWORD" -e "SELECT 1;" >/dev/null 2>&1; then
         echo "MySQL está listo para aceptar conexiones."
         break
     else
