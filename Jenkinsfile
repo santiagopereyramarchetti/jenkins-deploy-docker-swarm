@@ -141,7 +141,7 @@ pipeline {
                             export REDIS_CONTAINER_NAME='${REDIS_CONTAINER_NAME}' \
                             export REDIS_CONTAINER_NAME='${LARAVEL_ENV_SECRET}' \
                             export REDIS_CONTAINER_NAME='${INIT_ENV_SECRET}' \
-                            && docker stack deploy -f docker-compose.yml my-app"
+                            && docker stack deploy -c docker-compose.yml my-app"
                     '''
                 }
             }
